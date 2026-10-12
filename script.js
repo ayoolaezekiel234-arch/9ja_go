@@ -1,131 +1,81 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e1b4b);
-    color: #f8fafc;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+let player = {
+    name: "",
+    skinColor: "#8d5524",
+    outfitColor: "#1f6feb",
+    background: "", // "Lapo" or "Nepo"
+    age: 12,
+    termCount: 0, // 0 to 18 terms
+    classes: ["JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3"]
+};
+
+function goToWheel() {
+    const nameVal = document.getElementById("player-name").value.trim();
+    if (!nameVal) {
+        alert("Please enter your character's name!");
+        return;
+    }
+    player.name = nameVal;
+    player.skinColor = document.getElementById("skin-color").value;
+    player.outfitColor = document.getElementById("outfit-color").value;
+
+    document.getElementById("custom-screen").classList.add("hidden");
+    document.getElementById("wheel-screen").classList.remove("hidden");
 }
 
-#game-container {
-    width: 100%;
-    max-width: 480px;
-    background: rgba(30, 41, 59, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
-    box-sizing: border-box;
+function spinDestinyWheel() {
+    const outcomes = ["🔴 Lapo (Trenches Hustle)", "🟢 Nepo (Soft Life Backing)"];
+    const chosen = outcomes[Math.floor(Math.random() * outcomes.length)];
+    player.background = chosen;
+
+    const wheelDisplay = document.getElementById("wheel-display");
+    wheelDisplay.innerText = `Result: ${chosen}`;
+    document.getElementById("enter-school-btn").classList.remove("hidden");
 }
 
-.screen {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+function enterSchool() {
+    document.getElementById("wheel-screen").classList.add("hidden");
+    document.getElementById("school-screen").classList.remove("hidden");
+    updateSchoolHUD();
 }
 
-.hidden {
-    display: none !important;
+function updateSchoolHUD() {
+    let currentClass = player.classes[Math.floor(player.termCount / 3)] || "Graduate";
+    document.getElementById("hud-name").innerText = `Name: ${player.name}`;
+    document.getElementById("hud-age").innerText = `Age: ${player.age}`;
+    document.getElementById("hud-class").innerText = `Class: ${currentClass}`;
+    document.getElementById("hud-bg").innerText = `Background: ${player.background.includes("Lapo") ? "Lapo" : "Nepo"}`;
 }
 
-h1, h2 {
-    color: #4ade80;
-    text-align: center;
-    margin: 0 0 8px 0;
+function advanceTerm() {
+    if (player.termCount < 18) {
+        player.termCount++;
+        player.age = 12 + Math.floor(player.termCount / 3);
+        updateSchoolHUD();
+        
+        const currentClass = player.classes[Math.floor(player.termCount / 3)] || "Graduated";
+        alert(`Term completed! You are now in ${currentClass} at age ${player.age}.`);
+    } else {
+        alert("You have completed secondary school and graduated! Real world awaits.");
+    }
 }
 
-input, select, button {
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #475569;
-    background: #0f172a;
-    color: white;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
+function changeLocation(loc) {
+    const teacherBox = document.getElementById("teacher-box");
+    if(loc === 'Classroom') {
+        teacherBox.innerText = "👩‍🏫 AI Teacher: Eyes on the chalkboard! No whispering.";
+    } else if(loc === 'Hallway') {
+        teacherBox.innerText = "🚶‍♂️ Hallway: Prefects are patrolling! Watch your step.";
+    } else if(loc === 'TuckShop') {
+        teacherBox.innerText = "🛒 Tuck Shop: Buying cold Pepsi and gala during short break!";
+    }
 }
 
-.custom-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #1e293b;
-    padding: 10px 14px;
-    border-radius: 10px;
-}
+function sendChatMessage() {
+    const input = document.getElementById("chat-input");
+    const chatMsgs = document.getElementById("chat-messages");
+    if(!input.value.trim()) return;
 
-.custom-group input[type="color"] {
-    width: 50px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    background: none;
-}
-
-button {
-    background: #2563eb;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background: #1d4ed8;
-}
-
-.wheel-box {
-    background: #0f172a;
-    border: 2px dashed #4ade80;
-    padding: 30px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 12px;
-    color: #facc15;
-}
-
-.hud {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    border: 1px solid #334155;
-}
-
-.classroom-box, .chat-box {
-    background: #1e293b;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-}
-
-#chat-messages {
-    height: 120px;
-    overflow-y: auto;
-    background: #0f172a;
-    padding: 8px;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-bottom: 8px;
-    border: 1px solid #334155;
-}
-
-.hallway-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    margin-top: 10px;
-}
-
-.hallway-nav button {
-    padding: 8px;
-    font-size: 12px;
-    background: #334155;
+    chatMsgs.innerHTML += `<p><strong>${player.name}:</strong> ${input.value}</p>`;
+    input.value = "";
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
