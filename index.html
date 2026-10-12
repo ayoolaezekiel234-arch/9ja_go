@@ -1,55 +1,75 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9ja_go - The Ultimate Nigerian Life Sim</title>
+    <title>9ja_go - Ultimate Life Sim</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <!-- Screen 1: Character Creation -->
-        <div id="creation-screen" class="screen">
+        
+        <!-- Screen 1: Character Customization & Details -->
+        <div id="custom-screen" class="screen">
             <h1>🇳🇬 9ja_go</h1>
-            <p>From JSS1 to the real world. Choose your destiny.</p>
-            <input type="text" id="char-name" placeholder="Enter Character Name..." />
-            <select id="char-gender">
-                <option value="Male">Male 👤</option>
-                <option value="Female">Female 👩‍🦰</option>
-            </select>
-            <button onclick="startJourney()">Begin JSS1 (Age 12)</button>
-        </div>
-
-        <!-- Screen 2: Main Game Loop / School Phase -->
-        <div id="main-screen" class="screen hidden">
-            <div class="header-stats">
-                <span id="display-name">Name: </span>
-                <span id="display-age">Age: 12</span>
-                <span id="display-class">Class: JSS1</span>
-                <span id="display-bank">Balance: ₦5,000</span>
+            <p>Customize your character before facing the wheel of destiny.</p>
+            
+            <input type="text" id="player-name" placeholder="Enter Character Name..." />
+            
+            <div class="custom-group">
+                <label>Skin Tone:</label>
+                <input type="color" id="skin-color" value="#8d5524">
             </div>
             
-            <div class="panel">
-                <h3>School Life & Activities</h3>
-                <p id="status-text">You just entered JSS1. Make wise choices!</p>
-                <button onclick="passTerm()">Complete Term & Advance</button>
+            <div class="custom-group">
+                <label>Outfit Style & Color:</label>
+                <input type="color" id="outfit-color" value="#1f6feb">
             </div>
 
-            <!-- Wheel Event Screen (Triggers at Age 18) -->
-            <div id="wheel-section" class="panel hidden">
-                <h3>The Wheel of Fate (Age 18)</h3>
-                <p>Spin to determine your background: Lapo (Trenches) or Nepo (Soft life)!</p>
-                <button onclick="spinWheel()">Spin the Wheel 🎡</button>
-                <div id="wheel-result"></div>
-            </div>
-
-            <!-- Job Market (Unlocked at Age 18) -->
-            <div id="job-section" class="panel hidden">
-                <h3>Choose Your Career Path</h3>
-                <div id="job-list"></div>
-            </div>
+            <button onclick="goToWheel()">Proceed to Wheel of Fate 🎡</button>
         </div>
+
+        <!-- Screen 2: The Lapo vs Nepo Wheel -->
+        <div id="wheel-screen" class="screen hidden">
+            <h2>The Wheel of Fate</h2>
+            <p>Your background determines your starting leverage in life.</p>
+            <div class="wheel-box" id="wheel-display">Tap to Spin!</div>
+            <button onclick="spinDestinyWheel()">Spin the Wheel 🎯</button>
+            <button id="enter-school-btn" class="hidden" onclick="enterSchool()">Enter JSS1 School Gate 🏫</button>
+        </div>
+
+        <!-- Screen 3: Main School & Classroom Hub -->
+        <div id="school-screen" class="screen hidden">
+            <div class="hud">
+                <span id="hud-name"></span>
+                <span id="hud-age">Age: 12</span>
+                <span id="hud-class">JSS1</span>
+                <span id="hud-bg"></span>
+            </div>
+
+            <div class="classroom-box">
+                <h3>🏫 Classroom 402 (JSS1)</h3>
+                <p id="teacher-box">👩‍🏫 AI Teacher Mrs. Okafor: "Welcome to secondary school, class! Silence!"</p>
+                
+                <div class="hallway-nav">
+                    <button onclick="changeLocation('Classroom')">Classroom</button>
+                    <button onclick="changeLocation('Hallway')">Hallways</button>
+                    <button onclick="changeLocation('TuckShop')">Tuck Shop</button>
+                </div>
+            </div>
+
+            <div class="chat-box">
+                <h4>School Live Chat (Classmates & Players)</h4>
+                <div id="chat-messages">
+                    <p><em>System: You joined the school grounds.</em></p>
+                </div>
+                <input type="text" id="chat-input" placeholder="Type a message to classmates..." />
+                <button onclick="sendChatMessage()">Send</button>
+            </div>
+            
+            <button onclick="advanceTerm()" style="background:#2ea043; margin-top:10px;">Complete Current Term 📚</button>
+        </div>
+
     </div>
     <script src="script.js"></script>
 </body>
