@@ -3,74 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9ja_go - Ultimate Life Sim</title>
+    <title>9ja_go - Ultimate Nigerian Life Sim</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        
-        <!-- Screen 1: Character Customization & Details -->
-        <div id="custom-screen" class="screen">
-            <h1>🇳🇬 9ja_go</h1>
-            <p>Customize your character before facing the wheel of destiny.</p>
-            
-            <input type="text" id="player-name" placeholder="Enter Character Name..." />
-            
-            <div class="custom-group">
-                <label>Skin Tone:</label>
-                <input type="color" id="skin-color" value="#8d5524">
-            </div>
-            
-            <div class="custom-group">
-                <label>Outfit Style & Color:</label>
-                <input type="color" id="outfit-color" value="#1f6feb">
-            </div>
 
-            <button onclick="goToWheel()">Proceed to Wheel of Fate 🎡</button>
+    <!-- TOP HUD BAR (Time, Location, Stats, Money) -->
+    <header id="top-hud" class="hidden">
+        <div class="hud-left">
+            <span id="hud-time">🕒 8:38 AM</span>
+            <span id="hud-location">Lagos Mainland</span>
         </div>
-
-        <!-- Screen 2: The Lapo vs Nepo Wheel -->
-        <div id="wheel-screen" class="screen hidden">
-            <h2>The Wheel of Fate</h2>
-            <p>Your background determines your starting leverage in life.</p>
-            <div class="wheel-box" id="wheel-display">Tap to Spin!</div>
-            <button onclick="spinDestinyWheel()">Spin the Wheel 🎯</button>
-            <button id="enter-school-btn" class="hidden" onclick="enterSchool()">Enter JSS1 School Gate 🏫</button>
+        <div class="hud-center">
+            <span>⚡ <span id="stat-energy">100</span>/100</span>
+            <span>🍔 <span id="stat-hunger">92</span>/100</span>
         </div>
+        <div class="hud-right">
+            <span class="money-tag">₦<span id="stat-money">2,500</span></span>
+        </div>
+    </header>
 
-        <!-- Screen 3: Main School & Classroom Hub -->
-        <div id="school-screen" class="screen hidden">
-            <div class="hud">
-                <span id="hud-name"></span>
-                <span id="hud-age">Age: 12</span>
-                <span id="hud-class">JSS1</span>
-                <span id="hud-bg"></span>
-            </div>
+    <!-- MAIN GAME CONTAINER -->
+    <main id="game-wrapper">
 
-            <div class="classroom-box">
-                <h3>🏫 Classroom 402 (JSS1)</h3>
-                <p id="teacher-box">👩‍🏫 AI Teacher Mrs. Okafor: "Welcome to secondary school, class! Silence!"</p>
+        <!-- SCREEN 1: Character Creation & Customization -->
+        <section id="screen-custom" class="game-screen">
+            <div class="card">
+                <h1>🇳🇬 9ja_go</h1>
+                <p class="subtitle">Design your character before entering the streets.</p>
                 
-                <div class="hallway-nav">
-                    <button onclick="changeLocation('Classroom')">Classroom</button>
-                    <button onclick="changeLocation('Hallway')">Hallways</button>
-                    <button onclick="changeLocation('TuckShop')">Tuck Shop</button>
+                <div class="form-group">
+                    <label>Character Name</label>
+                    <input type="text" id="input-name" placeholder="e.g. Leima" />
                 </div>
-            </div>
 
-            <div class="chat-box">
-                <h4>School Live Chat (Classmates & Players)</h4>
-                <div id="chat-messages">
-                    <p><em>System: You joined the school grounds.</em></p>
+                <div class="form-group custom-row">
+                    <label>Skin Tone</label>
+                    <input type="color" id="input-skin" value="#8d5524">
                 </div>
-                <input type="text" id="chat-input" placeholder="Type a message to classmates..." />
-                <button onclick="sendChatMessage()">Send</button>
-            </div>
-            
-            <button onclick="advanceTerm()" style="background:#2ea043; margin-top:10px;">Complete Current Term 📚</button>
-        </div>
 
-    </div>
-    <script src="script.js"></script>
+                <div class="form-group custom-row">
+                    <label>Outfit Color</label>
+                    <input type="color" id="input-outfit" value="#1f6feb">
+                </div>
+
+                <button class="btn-primary" onclick="proceedToWheel()">Proceed to Wheel of Fate 🎡</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: The Lapo vs Nepo Destiny Wheel -->
+        <section id="screen-wheel" class="game-screen hidden">
+            <div class="card text-center">
+                <h2>The Wheel of Fate</h2>
+                <p class="subtitle">Will you start from the trenches (Lapo) or soft life (Nepo)?</p>
+                
+                <div id="wheel-box" class="wheel-display">
+                    <span>Tap to Spin the Wheel!</span>
+                </div>
+
+                <button class="btn-primary" id="btn-spin" onclick="spinWheel()">Spin the Wheel 🎯</button>
+                <button class="btn-success hidden" id="btn-enter-school" onclick="enterSchoolWorld()">Enter Secondary School Gate 🏫</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: The School World & Classrooms -->
+        <section id="screen-school" class="game-screen hidden">
+            <div class="card school-card">
+                <div class="school-header">
+                    <h3 id="current-room-title">🏫 Classroom 402 (JSS1)</h3>
+                    <span id="player-age-class">JSS1 • Age 12</span>
+                </div>
+
+                <div class="viewport-box">
+                    <p id="ai-announcement">👩‍🏫 AI Teacher Mrs. Okafor: "Welcome to 9ja_go secondary school! Take your seats."</p>
+                </div>
+
+                <div class="nav-grid">
+                    <button onclick="switchRoom('Classroom')">📚 Classroom</button>
+                    <button onclick="switchRoom('Hallway')">🚶‍♂️ Hallways</button>
+                    <button onclick="switchRoom('TuckShop')">🛒 Tuck Shop</button>
+                </div>
+
+                <div class="chat-section">
+                    <h4>Classroom Live Feed</h4>
+                    <div id="chat-feed">
+                        <p class="system-msg">System: You joined Classroom 402 successfully.</p>
+                    </div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chat-msg-input" placeholder="Say something to classmates..." />
+                        <button onclick="sendChat()">Send</button>
+                    </div>
+                </div>
+
+                <button class="btn-success mt-3" onclick="advanceSchoolTerm()">Complete Current Term 📚</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION DOCK (Home, Buy, Map, Phone) -->
+    <nav id="bottom-dock" class="hidden">
+        <button onclick="navTab('home')" class="nav-btn active">🏠<span>Home</span></button>
+        <button onclick="navTab('buy')" class="nav-btn">🛒<span>Buy</span></button>
+        <button onclick="navTab('map')" class="nav-btn">🗺️<span>Map</span></button>
+        <button onclick="navTab('phone')" class="nav-btn">📱<span>Phone</span></button>
+    </nav>
+
+    <script src="app.js"></script>
 </body>
 </html>
