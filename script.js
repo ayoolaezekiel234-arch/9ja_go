@@ -1,85 +1,131 @@
-let player = {
-    name: "",
-    gender: "Male",
-    age: 12,
-    classIndex: 0, // 0: JSS1, 1: JSS2, 2: JSS3, 3: SSS1, 4: SSS2, 5: SSS3, 6: Graduate
-    bank: 5000,
-    background: null, // "Lapo" or "Nepo"
-    job: null
-};
-
-const classes = ["JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3"];
-
-function startJourney() {
-    const nameInput = document.getElementById("char-name").value.trim();
-    if(!nameInput) {
-        alert("Enter your character name first!");
-        return;
-    }
-    player.name = nameInput;
-    document.getElementById("display-name").innerText = `Name: ${player.name}`;
-    
-    document.getElementById("creation-screen").classList.add("hidden");
-    document.getElementById("main-screen").classList.remove("hidden");
-    updateUI();
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    color: #f8fafc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-function updateUI() {
-    document.getElementById("display-age").innerText = `Age: ${player.age}`;
-    document.getElementById("display-class").innerText = `Class: ${classes[player.classIndex] || "Graduate"}`;
-    document.getElementById("display-bank").innerText = `Balance: ₦${player.bank.toLocaleString()}`;
+#game-container {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
 }
 
-function passTerm() {
-    if (player.classIndex < classes.length - 1) {
-        player.classIndex++;
-        player.age += 1; // Advance age as they scale through classes
-        updateUI();
-        document.getElementById("status-text").innerText = `You successfully promoted to ${classes[player.classIndex]}! Age is now ${player.age}.`;
-        
-        // Check if reached Age 18 (SSS3 graduate)
-        if (player.age >= 18) {
-            document.getElementById("status-section")?.remove();
-            document.getElementById("wheel-section").classList.remove("hidden");
-        }
-    } else {
-        alert("You have finished secondary school! Spin the wheel.");
-    }
+.screen {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-function spinWheel() {
-    const outcomes = ["Lapo", "Nepo"];
-    const chosenBackground = outcomes[Math.floor(Math.random() * outcomes.length)];
-    player.background = chosenBackground;
-    
-    let resultDiv = document.getElementById("wheel-result");
-    if (chosenBackground === "Lapo") {
-        resultDiv.innerHTML = `<p style="color: #ff7b72;">🔴 Wheel Landed on: <strong>Lapo!</strong> Pure grit and hustle begins.</p>`;
-    } else {
-        resultDiv.innerHTML = `<p style="color: #3fb950;">🟢 Wheel Landed on: <strong>Nepo!</strong> Soft life and family connections unlocked.</p>`;
-    }
-    
-    document.getElementById("wheel-section").querySelector("button").style.display = "none";
-    loadJobs(chosenBackground);
+.hidden {
+    display: none !important;
 }
 
-function loadJobs(bg) {
-    const jobSection = document.getElementById("job-section");
-    const jobList = document.getElementById("job-list");
-    jobSection.classList.remove("hidden");
-    
-    let jobs = [];
-    if(bg === "Lapo") {
-        jobs = ["Apprentice Mechanic", "POS Kiosk Operator", "Dispatch Rider", "Tailor Apprentice", "Market Trader", "Yahoo Boy (High Risk)"];
-    } else {
-        jobs = ["Corporate Executive Trainee", "Tech Startup Founder", "Immediate Japa (Abroad)", "Luxury Content Creator", "Political Appointee", "Real Estate Manager"];
-    }
-    
-    jobList.innerHTML = "<h4>Select a Career path:</h4>" + jobs.map(j => `<button onclick="selectJob('${j}')" style="margin-top:5px; background:#1f6feb;">${j}</button>`).join("");
+h1, h2 {
+    color: #4ade80;
+    text-align: center;
+    margin: 0 0 8px 0;
 }
 
-function selectJob(jobName) {
-    player.job = jobName;
-    alert(`Congratulations! You chose: ${jobName}. Your 9ja_go adult life journey begins now!`);
+input, select, button {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+.custom-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e293b;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.custom-group input[type="color"] {
+    width: 50px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    background: none;
+}
+
+button {
+    background: #2563eb;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.wheel-box {
+    background: #0f172a;
+    border: 2px dashed #4ade80;
+    padding: 30px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 12px;
+    color: #facc15;
+}
+
+.hud {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    border: 1px solid #334155;
+}
+
+.classroom-box, .chat-box {
+    background: #1e293b;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+}
+
+#chat-messages {
+    height: 120px;
+    overflow-y: auto;
+    background: #0f172a;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    border: 1px solid #334155;
+}
+
+.hallway-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.hallway-nav button {
+    padding: 8px;
+    font-size: 12px;
+    background: #334155;
+}
